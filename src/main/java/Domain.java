@@ -1,32 +1,45 @@
-import Service.UsersService;
-import bl.Until;
-import entity.Users;
-
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public class Domain {
+    //private  static final  Logger logger = Logger.getLogger(Domain.class.getName());
 
-    public static void main(String[] args){
-        Until until = new Until();
+    private static Logger LOGGER = Logger.getLogger(Domain.class.getName());
+
+    static {
+        InputStream stream = Domain.class.getClassLoader().
+                getResourceAsStream("logging.properties");
+        try {
+            LogManager.getLogManager().readConfiguration(stream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main(String[] args) {
+        LOGGER.log(Level.FINER, "finer");
+        LOGGER.log(Level.INFO, "info");
+
+        /*Until until = new Until();
         until.getConnection();
-        /*
+
         UsersService usersService = new UsersService();
 
         Users users = new Users();
-        users.setEmail("test@gmail.com");
-        users.setFullName("Test");
-        users.setPassword("SomePassword");
+        users.setEmail("test2@gmail.com");
+        users.setFullName("Test2");
+        users.setPassword("SomePassword2");
         users.setUserRole("player");
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
-        users.setCreatedAt(timeStamp);
+        Date date = new Date();
+        Timestamp ts = new Timestamp(date.getTime());
+        users.setCreatedAt(ts);
         try {
             usersService.add(users);
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-        */
+        }*/
     }
 }
