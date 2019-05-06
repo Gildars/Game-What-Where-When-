@@ -10,7 +10,7 @@ public interface TeamsDAO {
     //read
     List<Teams> getAll();
 
-    Teams getById(Integer id);
+    Teams getByTeamId(Integer id);
 
     //update
     void update(Teams teams);

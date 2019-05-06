@@ -10,7 +10,7 @@ public interface QuestionsDAO {
     //read
     List<Questions> getAll();
 
-    Questions getById(Integer id);
+    Questions getByQuestionId(Integer id);
 
     //update
     void update(Questions questions);

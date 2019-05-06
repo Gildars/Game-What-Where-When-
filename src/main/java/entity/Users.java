@@ -1,5 +1,6 @@
 package entity;
 
+
 import java.sql.Timestamp;
 
 public class Users {
@@ -9,7 +10,7 @@ public class Users {
     private String email;
     private String password;
     private String userRole;
-    private String createdAt;
+    private Timestamp createdAt;
 
     public Users() {
 
@@ -63,11 +64,11 @@ public class Users {
         this.userRole = userRole;
     }
 
-    public String getCreatedAt() {
+    public Timestamp getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
     }
 

@@ -11,7 +11,6 @@ public interface AnswerDAO {
     //read
     List<Answers> getAll();
 
-    Answers getByQuestionId(Integer id);
     Answers getByAnswerId(Integer id);
     //update
     void update(Answers answers);

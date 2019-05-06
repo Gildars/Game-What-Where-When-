@@ -11,21 +11,20 @@ import java.util.List;
 
 public class UsersService extends Until implements UsersDAO {
 
-    Connection connection = getConnection();
+    private Connection connection = getConnection();
 
     public void add(Users user) throws SQLException {
         PreparedStatement preparedStatement = null;
 
-        String sql = "INSERT INTO users (team_id, full_name, email, password, user_role, created_at) VALUES(?,?,?,?,?,?)";
+        String sql = "INSERT INTO users (full_name, email, password, user_role, created_at) VALUES(?,?,?,?,?)";
 
         try {
             preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setInt(1, user.getTeamId());
-            preparedStatement.setString(2, user.getFullName());
-            preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, user.getPassword());
-            preparedStatement.setString(5, user.getUserRole());
-            preparedStatement.setString(6, user.getCreatedAt());
+            preparedStatement.setString(1, user.getFullName());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(4, user.getUserRole());
+            preparedStatement.setTimestamp(5, user.getCreatedAt());
 
             preparedStatement.execute();
         } catch (SQLException e) {

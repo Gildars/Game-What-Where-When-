@@ -12,7 +12,7 @@ public interface GamesSessionsDAO {
     List<GamesSessions> getAll();
 
     GamesSessions getByTeamId(Integer id);
-    GamesSessions getByJudgeId(Integer id);
+    GamesSessions getByGameSessionId(Integer id);
 
     //update
     void update(GamesSessions gamesSessions);
