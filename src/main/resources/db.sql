@@ -1,47 +1,74 @@
-CREATE DATABASE  IF NOT EXISTS `accounts`;
-USE `accounts`;
---
--- Table structure for table `role`
---
+--DROP TABLE answers, questions, tips, users,games_sessions, games_setings, teams;
 
-DROP TABLE IF EXISTS `role`;
-CREATE TABLE `role` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+CREATE TABLE tips (
+  tip_id INTEGER UNSIGNED AUTO_INCREMENT NOT NULL,
+  title VARCHAR(500) NOT NULL,
+  PRIMARY KEY(tip_id)
+);
 
---
--- Dumping data for table `role`
---
+CREATE TABLE questions (
+  question_id INTEGER UNSIGNED AUTO_INCREMENT NOT NULL,
+  tip_id INTEGER UNSIGNED NOT NULL,
+  title VARCHAR(1000) NOT NULL,
+  PRIMARY KEY (question_id),
+  FOREIGN KEY (tip_id) REFERENCES tips(tip_id)
+);
 
-LOCK TABLES `role` WRITE;
-INSERT INTO `role` VALUES (1,'ROLE_USER');
-UNLOCK TABLES;
+CREATE TABLE answers (
+  answer_id INTEGER UNSIGNED AUTO_INCREMENT NOT NULL,
+  question_id INTEGER UNSIGNED NOT NULL,
+  title VARCHAR(350) NOT NULL,
+  is_right TINYINT (1) CHECK(
+    is_right = 0
+    OR is_right = 1
+  ),
+  PRIMARY KEY (answer_id),
+  FOREIGN KEY (question_id) REFERENCES questions(question_id)
+);
 
---
--- Table structure for table `user`
---
+CREATE TABLE teams (
+  team_id INTEGER UNSIGNED AUTO_INCREMENT NOT NULL,
+  name VARCHAR(50) NOT NULL,
+  PRIMARY KEY (team_id)
+);
 
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `password` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+CREATE TABLE users (
+  user_id INTEGER UNSIGNED AUTO_INCREMENT NOT NULL,
+  team_id INTEGER UNSIGNED DEFAULT(NULL),
+  full_name VARCHAR(100) NOT NULL,
+  email VARCHAR(256) UNIQUE NOT NULL,
+  password VARCHAR(20) NOT NULL,
+  user_role VARCHAR(12) CHECK(
+    user_role = 'judge'
+    OR user_role = 'player'
+  ),
+  created_at DATETIME DEFAULT(CURRENT_TIMESTAMP) NOT NULL,
+  PRIMARY KEY (user_id),
+  FOREIGN KEY (team_id) REFERENCES teams(team_id)
+);
 
---
--- Table structure for table `user_role`
---
+CREATE TABLE games_setings (
+  game_setings_id INTEGER UNSIGNED AUTO_INCREMENT NOT NULL,
+  time_per_question TIME NOT NULL,
+  count_players TINYINT(10) UNSIGNED CHECK(count_players > 1),
+  count_questions TINYINT(20) UNSIGNED CHECK(count_questions > 1),
+  tips_type VARCHAR(50) CHECK(tips_type IN ('show_the_probability_of_the_correct_answer','remove_some_wrong', 'give_text_hint','give extra time')),
+  PRIMARY KEY (game_setings_id)
+);
 
-DROP TABLE IF EXISTS `user_role`;
-CREATE TABLE `user_role` (
-  `user_id` int(11) NOT NULL,
-  `role_id` int(11) NOT NULL,
-  PRIMARY KEY (`user_id`,`role_id`),
-  KEY `fk_user_role_roleid_idx` (`role_id`),
-  CONSTRAINT `fk_user_role_roleid` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_user_role_userid` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+CREATE TABLE games_sessions (
+  game_session_id INTEGER UNSIGNED AUTO_INCREMENT NOT NULL,
+  team_id INTEGER UNSIGNED NOT NULL,
+  judge_id INTEGER UNSIGNED NOT NULL,
+  game_seting_id INTEGER UNSIGNED NOT NULL,
+  score TINYINT(100) UNSIGNED DEFAULT(0) NOT NULL,
+  created_at DATETIME DEFAULT(CURRENT_TIMESTAMP) NOT NULL,
+  is_game_over TINYINT(1) DEFAULT(0) CHECK(
+    is_game_over = 0
+    OR is_game_over = 1
+  ),
+  PRIMARY KEY (game_session_id),
+  FOREIGN KEY (team_id) REFERENCES teams(team_id),
+  FOREIGN KEY (judge_id) REFERENCES users(user_id),
+  FOREIGN KEY (game_seting_id) REFERENCES games_setings(game_setings_id)
+);
